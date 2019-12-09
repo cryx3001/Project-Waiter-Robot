@@ -61,6 +61,11 @@ def index():
 def video_feed():
 	return Response(show_webcam(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
+#  1-99	: Go to target number ..
+#  0	: Go to home
+# -1 	: Nothing sent
+# -2 	: Action cancelled
+# -3 	: Timeout error
 @app.route('/api', methods=["POST"])
 def getNumberTable():
 	if request.method == "POST":
@@ -73,6 +78,8 @@ def getNumberTable():
 
 		return numberTable
 
+
+# TODO: Add a method to show the status on the interface
 
 
 if __name__ == '__main__':
