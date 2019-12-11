@@ -23,9 +23,13 @@ def main():
 
 	qrText = sp.detect_qrcode(img, args.stream)
 
+
 	if not qrText:
 		img, biggest_contour, cX, cY = sp.process_contours(img, args.stream)
 		#print(sp.send_order_direction(100, width, cX))
+
+	statusText = tp.sendStatusCode()
+	cv2.putText(img, statusText, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (155, 155, 155), 2)
 
 	return img
 
@@ -62,12 +66,11 @@ def index():
 def video_feed():
 	return Response(show_webcam(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
-#  1-99	: Go to target number ..
+#  > 0	: Go to target number ..
 #  0	: Go to home
 # -1 	: Nothing sent
 # -2 	: Action cancelled
-# -3 	: Timeout error
-@app.route('/api_send', methods=["POST"])
+@app.route('/api', methods=["POST"])
 def getStatus():
 	if request.method == "POST":
 		try:
@@ -80,9 +83,6 @@ def getStatus():
 			return -1
 
 
-@app.route('/api_get')
-def sendStatus():
-	return Response(tp.sendStatusCode())
 
 if __name__ == '__main__':
 	app.run("0.0.0.0", "8000", debug=True, threaded=True, use_reloader=False)

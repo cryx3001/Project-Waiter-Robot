@@ -9,8 +9,12 @@ def getStatusCode(t):
 
 
 def sendStatusCode():
-	while True:
-		time.sleep(1)
-		print("SENT")
-		yield str(target_id)
+		if target_id == -2:
+			return "Annulé"
+		elif target_id == -1:
+			return "Attente"
+		elif target_id == 0:
+			return "Retour"
+		elif target_id > 0:
+			return "Go: " + str(target_id)
 
