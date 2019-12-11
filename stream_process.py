@@ -6,23 +6,27 @@ def detect_qrcode(img, show):
 	codes = pyzbar.decode(img)
 	qrText = None
 
-	if len(codes) > 0:
-		for code in codes:
-			qrText = code.data.decode("utf-8")
+	try:
+		if len(codes) > 0:
+			for code in codes:
+				qrText = code.data.decode("utf-8")
 
-			if show:
-				points = code.polygon
+				if show:
+					points = code.polygon
 
-				pt1 = (min(points[0][0], points[2][0]), min(points[0][1], points[2][1]))
-				pt2 = (max(points[0][0], points[2][0]), max(points[0][1], points[2][1]))
+					pt1 = (min(points[0][0], points[2][0]), min(points[0][1], points[2][1]))
+					pt2 = (max(points[0][0], points[2][0]), max(points[0][1], points[2][1]))
 
-				cv2.rectangle(img, pt1, pt2, (25, 25, 25), 2)
-				# pt1 en haut a gauche
-				# pt2 en bas a droite
+					cv2.rectangle(img, pt1, pt2, (25, 25, 25), 2)
+					# pt1 en haut a gauche
+					# pt2 en bas a droite
 
-				cv2.putText(img, qrText, (pt1[0], pt1[1] - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (25, 25, 25), 2)
+					cv2.putText(img, qrText, (pt1[0], pt1[1] - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (25, 25, 25), 2)
 
-		return qrText
+					return qrText
+
+	except IndexError:
+		return ""
 
 
 def process_contours(img, show):
