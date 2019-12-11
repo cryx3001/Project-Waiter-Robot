@@ -1,7 +1,16 @@
+import time
+target_id = -1
 
-target_id = None
-
-def sendStatus(t):
+def getStatusCode(t):
 	if t is not None:
+		global target_id
 		target_id = t
-		print(target_id)
+		print("GET " + str(target_id))
+
+
+def sendStatusCode():
+	while True:
+		time.sleep(1)
+		print("SENT")
+		yield str(target_id)
+

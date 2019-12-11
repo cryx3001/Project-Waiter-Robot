@@ -54,6 +54,7 @@ def show_webcam():
 
 @app.route("/")
 def index():
+	print("RENDER")
 	return render_template("index.html")
 
 
@@ -66,21 +67,22 @@ def video_feed():
 # -1 	: Nothing sent
 # -2 	: Action cancelled
 # -3 	: Timeout error
-@app.route('/api', methods=["POST"])
-def getNumberTable():
+@app.route('/api_send', methods=["POST"])
+def getStatus():
 	if request.method == "POST":
 		try:
 			numberTable = request.values.get('input', '')
+			tp.getStatusCode(int(numberTable))
+			return numberTable
 
-			tp.sendStatus(int(numberTable))
 		except ValueError:
-			tp.sendStatus(-1)
+			tp.getStatusCode(-1)
+			return -1
 
-		return numberTable
 
-
-# TODO: Add a method to show the status on the interface
-
+@app.route('/api_get')
+def sendStatus():
+	return Response(tp.sendStatusCode())
 
 if __name__ == '__main__':
 	app.run("0.0.0.0", "8000", debug=True, threaded=True, use_reloader=False)
