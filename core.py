@@ -3,6 +3,7 @@ from flask import Response, Flask, render_template, request, jsonify
 import threading
 import cv2
 import argparse
+import RPi.GPIO as GPIO
 
 import target_process as tp
 import stream_process as sp
@@ -86,3 +87,5 @@ def getStatus():
 
 if __name__ == '__main__':
 	app.run("0.0.0.0", "8000", debug=True, threaded=True, use_reloader=False)
+
+GPIO.cleanup()
