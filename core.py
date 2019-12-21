@@ -4,7 +4,6 @@ import threading
 import cv2
 import argparse
 import RPi.GPIO as GPIO
-
 import target_process as tp
 import stream_process as sp
 
@@ -20,14 +19,11 @@ def main():
 	img = vs.read()
 
 	img = img[0:int(img.shape[0] / 2), 100:(img.shape[1] - 100)]
-	height, width, channels = img.shape
 
 	qrText = sp.detect_qrcode(img, args.stream)
-
-
 	if not qrText:
 		img, biggest_contour, cX, cY = sp.process_contours(img, args.stream)
-		#print(sp.send_order_direction(100, width, cX))
+		sp.send_order_direction(100, img.shape[1], cX)
 
 	statusText = tp.sendStatusCode()
 	cv2.putText(img, statusText, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (155, 155, 155), 2)
@@ -71,6 +67,7 @@ def video_feed():
 #  0	: Go to home
 # -1 	: Nothing sent
 # -2 	: Action cancelled
+# -3	: On Target
 @app.route('/api', methods=["POST"])
 def getStatus():
 	if request.method == "POST":
@@ -84,8 +81,8 @@ def getStatus():
 			return -1
 
 
-
 if __name__ == '__main__':
+	GPIO.setwarnings(False)
 	app.run("0.0.0.0", "8000", debug=True, threaded=True, use_reloader=False)
 
 GPIO.cleanup()

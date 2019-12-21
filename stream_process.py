@@ -2,6 +2,9 @@ import numpy as np
 from pyzbar import pyzbar
 import cv2
 
+import motors as mot
+
+
 def detect_qrcode(img, show):
 	codes = pyzbar.decode(img)
 	qrText = None
@@ -90,9 +93,11 @@ def send_order_direction(xmargin, imgwidth, cx):
 	else:
 		coeff = 0
 
+	mot.adaptDutyCycleDep(int(coeff*100))
+
+
 	# coeff < 0 -> Go left
 	# coeff > 0 -> Go right
 
-	return coeff
 
 
