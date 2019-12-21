@@ -9,7 +9,9 @@ def getStatusCode(t):
 
 
 def sendStatusCode():
-		if target_id == -2:
+		if target_id == -3:
+			return "Sur cible"
+		elif target_id == -2:
 			return "Annulé"
 		elif target_id == -1:
 			return "Attente"
