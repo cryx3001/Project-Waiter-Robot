@@ -3,6 +3,7 @@ from pyzbar import pyzbar
 import cv2
 
 import motors as mot
+import target_process as tp
 
 
 def detect_qrcode(img, show):
@@ -25,11 +26,22 @@ def detect_qrcode(img, show):
 					# pt2 en bas a droite
 
 					cv2.putText(img, qrText, (pt1[0], pt1[1] - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (25, 25, 25), 2)
+					getNodeDirection(qrText, tp.getTarget())
 
-					return qrText
+			return qrText
+
 
 	except IndexError:
-		return ""
+		print("Erreur")
+
+def getNodeDirection(qrtext, target):
+	data = qrtext.split()
+	for d in data:
+		if int(d) == target:
+			id = data.index(d)
+			print("ID:" + str(id))
+			mot.adaptDutyCycleDep(201+id)
+			break
 
 
 def process_contours(img, show):
@@ -98,6 +110,5 @@ def send_order_direction(xmargin, imgwidth, cx):
 
 	# coeff < 0 -> Go left
 	# coeff > 0 -> Go right
-
 
 

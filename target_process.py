@@ -20,3 +20,5 @@ def sendStatusCode():
 		elif target_id > 0:
 			return "Go: " + str(target_id)
 
+def getTarget():
+	return target_id

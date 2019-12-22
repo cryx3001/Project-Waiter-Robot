@@ -19,8 +19,13 @@ def initMotorsDep(leftPinBcm, rightPinBcm):
 	rightMotPwm.start(0)
 
 
+# 200 = Stop
+# 201 = Left
+# 202 = Forward
+# 203 = Right
+# 204 = Backward
 def adaptDutyCycleDep(camValue):
-	if camValue != -100 and camValue != 100:
+	if camValue != -100 and camValue != 100 and  -100 < camValue < 100:
 		if camValue < 0:
 			leftPow = floor((100 - camValue) /2)
 			rightPow = ceil(50 + (camValue / 2))
@@ -34,6 +39,8 @@ def adaptDutyCycleDep(camValue):
 			leftPow = 50
 			rightPow = 50
 
+
+
 	else:
 		leftPow = 0
 		rightPow = 0
@@ -42,6 +49,8 @@ def adaptDutyCycleDep(camValue):
 	# rightMotPwm.ChangeDutyCycle(rightPow)
 	# leftMotPwm.ChangeDutyCycle(leftPow)
 
+	print("---------")
+	print("VALUE: "+ str(camValue))
 	print("LEFT: "+ str(leftPow))
 	print("RIGHT: "+ str(rightPow))
 
