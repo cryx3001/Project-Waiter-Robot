@@ -35,13 +35,16 @@ def detect_qrcode(img, show):
 		print("Erreur")
 
 def getNodeDirection(qrtext, target):
-	data = qrtext.split()
+	data = qrtext.split("/")
 	for d in data:
-		if int(d) == target:
-			id = data.index(d)
-			print("ID:" + str(id))
-			mot.adaptDutyCycleDep(201+id)
-			break
+		data_bis = d.split()
+
+		for d_bis in data_bis:
+			if int(d_bis) == target:
+				id = data.index(d)
+				print("ID:" + str(id))
+				mot.adaptDutyCycleDep(201+id)
+				break
 
 
 def process_contours(img, show):
