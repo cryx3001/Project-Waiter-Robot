@@ -1,5 +1,5 @@
 from imutils.video import WebcamVideoStream
-from flask import Response, Flask, render_template, request, jsonify
+from flask import Response, Flask, render_template, request
 import threading
 import cv2
 import argparse
@@ -84,5 +84,6 @@ def getStatus():
 if __name__ == '__main__':
 	GPIO.setwarnings(False)
 	app.run("0.0.0.0", "8000", debug=True, threaded=True, use_reloader=False)
+
 
 GPIO.cleanup()

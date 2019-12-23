@@ -42,8 +42,10 @@ def getNodeDirection(qrtext, target):
 		for d_bis in data_bis:
 			if int(d_bis) == target:
 				id = data.index(d)
-				print("ID:" + str(id))
-				mot.adaptDutyCycleDep(201+id)
+
+				if mot.stopCall is not True:
+					print("ID:" + str(id))
+					mot.adaptDutyCycleDep(201+id)
 				break
 
 
@@ -108,7 +110,9 @@ def send_order_direction(xmargin, imgwidth, cx):
 	else:
 		coeff = 0
 
-	mot.adaptDutyCycleDep(int(coeff*100))
+	print("STOP CALL IS: " + str(mot.stopCall))
+	if mot.stopCall is not True:
+		mot.adaptDutyCycleDep(int(coeff*100))
 
 
 	# coeff < 0 -> Go left
