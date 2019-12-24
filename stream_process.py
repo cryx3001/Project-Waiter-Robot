@@ -1,12 +1,15 @@
 import numpy as np
 from pyzbar import pyzbar
+from threading import Thread
 import cv2
-
 import motors as mot
 import target_process as tp
 
+lastQrText = None
 
 def detect_qrcode(img, show):
+	global lastQrText
+
 	codes = pyzbar.decode(img)
 	qrText = None
 
@@ -14,6 +17,11 @@ def detect_qrcode(img, show):
 		if len(codes) > 0:
 			for code in codes:
 				qrText = code.data.decode("utf-8")
+
+				if qrText != lastQrText:
+					getNodeDirection(qrText, tp.getTarget())
+
+				lastQrText = qrText
 
 				if show:
 					points = code.polygon
@@ -26,13 +34,12 @@ def detect_qrcode(img, show):
 					# pt2 en bas a droite
 
 					cv2.putText(img, qrText, (pt1[0], pt1[1] - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (25, 25, 25), 2)
-					getNodeDirection(qrText, tp.getTarget())
 
 			return qrText
 
-
 	except IndexError:
 		print("Erreur")
+
 
 def getNodeDirection(qrtext, target):
 	data = qrtext.split("/")
@@ -45,17 +52,17 @@ def getNodeDirection(qrtext, target):
 
 				if mot.stopCall is not True:
 					print("ID:" + str(id))
-					mot.adaptDutyCycleDep(201+id)
+					t = Thread(target=mot.doTurn, args=[201+id])
+					t.start()
 				break
 
 
 def process_contours(img, show):
 	gris = np.array([30, 30, 30], dtype="uint8")
 	noir = np.array([0, 0, 0], dtype="uint8")
+
 	biggest_contour = None
-
 	mask = 255 - cv2.inRange(img, noir, gris)
-
 	ret, tresh = cv2.threshold(mask, 127, 255, cv2.THRESH_BINARY_INV)
 	contours = cv2.findContours(tresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
 
@@ -110,7 +117,7 @@ def send_order_direction(xmargin, imgwidth, cx):
 	else:
 		coeff = 0
 
-	print("STOP CALL IS: " + str(mot.stopCall))
+	print(mot.stopCall)
 	if mot.stopCall is not True:
 		mot.adaptDutyCycleDep(int(coeff*100))
 

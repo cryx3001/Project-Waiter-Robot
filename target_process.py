@@ -1,4 +1,3 @@
-import time
 target_id = -1
 
 def getStatusCode(t):

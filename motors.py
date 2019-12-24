@@ -6,9 +6,7 @@ from math import *
 leftMotPwm = None
 rightMotPwm = None
 stopCall = False
-nowTime = None
-delayTime = None
-refreshTime = 15
+turnTime = 5
 
 def initMotorsDep(leftPinBcm, rightPinBcm):
 	GPIO.setmode(GPIO.BCM)
@@ -24,13 +22,11 @@ def initMotorsDep(leftPinBcm, rightPinBcm):
 	rightMotPwm = GPIO.PWM(rightPinBcm, 1000)
 	rightMotPwm.start(0)
 
-def fullMotorTimer(time):
-	# rightMotPwm.ChangeDutyCycle(0)
-	# leftMotPwm.ChangeDutyCycle
-	print("oui")
 
-def createDelay(delay, now):
-	return time.time() < now + delay
+def fullMotorTimer():
+	# rightMotPwm.ChangeDutyCycle(100)
+	# leftMotPwm.ChangeDutyCycle(100)
+	print("oui")
 
 
 # 200 = Stop
@@ -40,65 +36,24 @@ def createDelay(delay, now):
 # 204 = Backward
 def adaptDutyCycleDep(camValue):
 	global stopCall
-	global nowTime
 
-	if camValue != -100 and camValue != 100 and  -100 < camValue < 100:
-		stopCall = False
-
+	if camValue != -100 and camValue != 100 and -100 < camValue < 100:
 		if camValue < 0:
-			leftPow = floor((100 - camValue) /2)
-			rightPow = ceil(50 + (camValue / 2))
+			leftPow = floor(100 + camValue)
+			rightPow = 100
 
 
 		elif camValue > 0:
-			leftPow = ceil(50 + (camValue / 2))
-			rightPow = floor((100 - camValue) /2)
+			leftPow = 100
+			rightPow = floor(100 - camValue)
 
 		else:
-			leftPow = 50
-			rightPow = 50
-
-		print("---------")
-		print("VALUE: " + str(camValue))
-		print("LEFT: " + str(leftPow))
-		print("RIGHT: " + str(rightPow))
+			leftPow = 100
+			rightPow = 100
 
 		# rightMotPwm.ChangeDutyCycle(rightPow)
 		# leftMotPwm.ChangeDutyCycle(leftPow)
 
-	elif camValue >= 200:  # Let assume we need 5sec for a 90° turn and 3sec to be right on the qrcode
-		if nowTime is None or nowTime < time.time() - refreshTime:
-			nowTime = time.time()
-
-		print(str(nowTime) + " and " + str(nowTime - time.time() + refreshTime))
-
-		# if camValue == 200:  # Stop
-		# 	fullMotorTimer(3)
-		#
-		# elif camValue == 201:  # Left
-		# 	fullMotorTimer(3)
-		# 	# rightMotPwm.ChangeDutyCycle(0)
-		# 	# leftMotPwm.ChangeDutyCycle(100)
-		# 	sleep(5)
-		#
-		# elif camValue == 202:  # Forward
-		# 	fullMotorTimer(3)
-		#
-		# elif camValue == 203:  # Right
-		# 	fullMotorTimer(3)
-		# 	# rightMotPwm.ChangeDutyCycle(100)
-		# 	# leftMotPwm.ChangeDutyCycle(0)
-		# 	sleep(5)
-		#
-		# elif camValue == 204:  # Behind (Should never happen)
-		# 	fullMotorTimer(3)
-		# 	# rightMotPwm.ChangeDutyCycle(0)
-		# 	# leftMotPwm.ChangeDutyCycle(100)
-		# 	sleep(10)
-		#
-		# 	# rightMotPwm.ChangeDutyCycle(0)
-		# 	# leftMotPwm.ChangeDutyCycle(0)
-		# 	stopCall = False
 	else:
 		leftPow = 0
 		rightPow = 0
@@ -107,8 +62,31 @@ def adaptDutyCycleDep(camValue):
 		# rightMotPwm.ChangeDutyCycle(rightPow)
 		# leftMotPwm.ChangeDutyCycle(leftPow)
 
-		print("---------")
-		print("VALUE: "+ str(camValue))
-		print("LEFT: "+ str(leftPow))
-		print("RIGHT: "+ str(rightPow))
 
+def doTurn(camValue):
+	global stopCall
+
+	if camValue >= 200:  # Let assume we need 5sec for a 90° turn and 3sec to be right on the qrcode
+		stopCall = True
+		fullMotorTimer()
+		time.sleep(3)
+
+		if camValue == 201:  # Left
+			# rightMotPwm.ChangeDutyCycle(0)
+			# leftMotPwm.ChangeDutyCycle(100)
+			time.sleep(5)
+
+		elif camValue == 203:  # Right
+			# rightMotPwm.ChangeDutyCycle(100)
+			# leftMotPwm.ChangeDutyCycle(0)
+			time.sleep(5)
+
+		elif camValue == 204:  # Behind (Should never happen)
+			# rightMotPwm.ChangeDutyCycle(100)
+			# leftMotPwm.ChangeDutyCycle(0)
+			time.sleep(10)
+
+		# rightMotPwm.ChangeDutyCycle(0)
+		# leftMotPwm.ChangeDutyCycle(0)
+
+		stopCall = False
