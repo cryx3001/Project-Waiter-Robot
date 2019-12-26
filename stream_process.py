@@ -50,7 +50,7 @@ def getNodeDirection(qrtext, target):
 			if int(d_bis) == target:
 				id = data.index(d)
 
-				if mot.stopCall is not True:
+				if not mot.stopCall and not mot.sensorCollision:
 					print("ID:" + str(id))
 					t = Thread(target=mot.doTurn, args=[201+id])
 					t.start()
@@ -117,8 +117,9 @@ def send_order_direction(xmargin, imgwidth, cx):
 	else:
 		coeff = 0
 
-	print(mot.stopCall)
-	if mot.stopCall is not True:
+	mot.preventCollision() #We have to check if nothing is blocking the robot
+
+	if not mot.stopCall and not mot.sensorCollision:
 		mot.adaptDutyCycleDep(int(coeff*100))
 
 
