@@ -96,12 +96,13 @@ def preventCollision():
 	global stopCall
 	global sensorCollision
 
-	if stopCall is False:
-		dist = ds.getDistance()
-		if dist is not None and dist < 50:#1 meter
-			# rightMotPwm.ChangeDutyCycle(dist)
-			# leftMotPwm.ChangeDutyCycle(dist)
-			sensorCollision = True
-
-		else:
-			sensorCollision = False
+	# if stopCall is False:
+	#
+	# 	dist = ds.getDistance()
+	# 	if dist is not None and dist < 50:#1 meter
+	# 		# rightMotPwm.ChangeDutyCycle(dist)
+	# 		# leftMotPwm.ChangeDutyCycle(dist)
+	# 		sensorCollision = True
+	#
+	# 	else:
+	# 		sensorCollision = False

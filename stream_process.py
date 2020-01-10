@@ -46,15 +46,18 @@ def getNodeDirection(qrtext, target):
 	for d in data:
 		data_bis = d.split()
 
-		for d_bis in data_bis:
-			if int(d_bis) == target:
-				id = data.index(d)
+		try:
+			for d_bis in data_bis:
+				if int(d_bis) == target:
+					id = data.index(d)
 
-				if not mot.stopCall and not mot.sensorCollision:
-					print("ID:" + str(id))
-					t = Thread(target=mot.doTurn, args=[201+id])
-					t.start()
-				break
+					if not mot.stopCall and not mot.sensorCollision:
+						print("ID:" + str(id))
+						t = Thread(target=mot.doTurn, args=[201+id])
+						t.start()
+					break
+		except ValueError:
+			print("QR CODE INVALIDE")
 
 
 def process_contours(img, show):
