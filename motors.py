@@ -2,25 +2,25 @@ import time
 import distance_sensor as ds
 import RPi.GPIO as GPIO
 from math import *
+import config as cfg
 
 leftMotPwm = None
 rightMotPwm = None
 stopCall = False
 sensorCollision = False
-turnTime = 5
 
-def initMotorsDep(leftPinBcm, rightPinBcm):
+def initMotorsDep():
 	GPIO.setmode(GPIO.BCM)
 
-	GPIO.setup(leftPinBcm)
-	GPIO.setup(rightPinBcm)
+	GPIO.setup(cfg.PIN_LEFT_MOTOR)
+	GPIO.setup(cfg.PIN_RIGHT_MOTOR)
 
 	global leftMotPwm
-	leftMotPwm = GPIO.PWM(leftPinBcm, 1000)
+	leftMotPwm = GPIO.PWM(cfg.PIN_LEFT_MOTOR, 1000)
 	leftMotPwm.start(0)
 
 	global rightMotPwm
-	rightMotPwm = GPIO.PWM(rightPinBcm, 1000)
+	rightMotPwm = GPIO.PWM(cfg.PIN_RIGHT_MOTOR, 1000)
 	rightMotPwm.start(0)
 
 
@@ -80,12 +80,12 @@ def doTurn(camValue):
 		elif camValue == 203:  # Right
 			# rightMotPwm.ChangeDutyCycle(100)
 			# leftMotPwm.ChangeDutyCycle(0)
-			time.sleep(turnTime)
+			time.sleep(cfg.TURN_TIME)
 
 		elif camValue == 204:  # Behind (Should never happen)
 			# rightMotPwm.ChangeDutyCycle(100)
 			# leftMotPwm.ChangeDutyCycle(0)
-			time.sleep(turnTime*2)
+			time.sleep(cfg.TURN_TIME*2)
 
 		# rightMotPwm.ChangeDutyCycle(0)
 		# leftMotPwm.ChangeDutyCycle(0)

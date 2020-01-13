@@ -1,26 +1,25 @@
 import RPi.GPIO as GPIO
 import time
+import config as cfg
 
 GPIO.setmode(GPIO.BCM)
-PIN_TRIG = 26
-PIN_ECHO = 20
 
-GPIO.setup(PIN_TRIG, GPIO.OUT)
-GPIO.setup(PIN_ECHO, GPIO.IN)
+GPIO.setup(cfg.PIN_TRIG, GPIO.OUT)
+GPIO.setup(cfg.PIN_ECHO, GPIO.IN)
 
 
 def getDistance():
 	start = None
 	stop = None
 
-	GPIO.output(PIN_TRIG, True)
+	GPIO.output(cfg.PIN_TRIG, True)
 	time.sleep(0.00001)
-	GPIO.output(PIN_TRIG, False)
+	GPIO.output(cfg.PIN_TRIG, False)
 
-	while GPIO.input(PIN_ECHO) == 0:
+	while GPIO.input(cfg.PIN_ECHO) == 0:
 		start = time.time()
 
-	while GPIO.input(PIN_ECHO) == 1:
+	while GPIO.input(cfg.PIN_ECHO) == 1:
 		stop = time.time()
 
 	tps = stop - start
