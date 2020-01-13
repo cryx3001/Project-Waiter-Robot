@@ -56,6 +56,7 @@ def getNodeDirection(qrtext, target):
 						t = Thread(target=mot.doTurn, args=[201+id])
 						t.start()
 					break
+
 		except ValueError:
 			print("QR CODE INVALIDE")
 

@@ -61,6 +61,7 @@ def show_webcam():
 
 		yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(img) + b'\r\n')
 
+
 def initPins():
 	GPIO.setmode(GPIO.BCM)
 
