@@ -9,12 +9,7 @@ rightMotPwm = None
 stopCall = False
 sensorCollision = False
 
-def initMotorsDep():
-	GPIO.setmode(GPIO.BCM)
-
-	GPIO.setup(cfg.PIN_LEFT_MOTOR)
-	GPIO.setup(cfg.PIN_RIGHT_MOTOR)
-
+def initPwm():
 	global leftMotPwm
 	leftMotPwm = GPIO.PWM(cfg.PIN_LEFT_MOTOR, 1000)
 	leftMotPwm.start(0)
@@ -22,7 +17,6 @@ def initMotorsDep():
 	global rightMotPwm
 	rightMotPwm = GPIO.PWM(cfg.PIN_RIGHT_MOTOR, 1000)
 	rightMotPwm.start(0)
-
 
 def fullMotorTimer():
 	# rightMotPwm.ChangeDutyCycle(100)

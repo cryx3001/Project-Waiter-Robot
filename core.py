@@ -6,7 +6,8 @@ import argparse
 import RPi.GPIO as GPIO
 import target_process as tp
 import stream_process as sp
-from time import sleep
+import motors as mot
+import config as cfg
 
 vs = WebcamVideoStream(src=0).start()
 lock = threading.Lock()
@@ -57,7 +58,18 @@ def show_webcam():
 			if not flag:
 				continue
 
+
 		yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + bytearray(img) + b'\r\n')
+
+def initPins():
+	GPIO.setmode(GPIO.BCM)
+
+	GPIO.setup(cfg.PIN_LEFT_MOTOR)
+	GPIO.setup(cfg.PIN_RIGHT_MOTOR)
+	mot.initPwm()
+
+	GPIO.setup(cfg.PIN_TRIG, GPIO.OUT)
+	GPIO.setup(cfg.PIN_ECHO, GPIO.IN)
 
 
 @app.route("/")
@@ -89,11 +101,8 @@ def getStatus():
 
 
 if __name__ == '__main__':
-	try:
-		app.run("0.0.0.0", "8000", debug=True, threaded=True, use_reloader=False)
+	app.run("0.0.0.0", "8000", debug=True, threaded=True, use_reloader=False)
 
-	except KeyboardInterrupt:
-		GPIO.cleanup()
 
 
 GPIO.cleanup()

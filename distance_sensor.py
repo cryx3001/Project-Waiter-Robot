@@ -2,11 +2,6 @@ import RPi.GPIO as GPIO
 import time
 import config as cfg
 
-GPIO.setmode(GPIO.BCM)
-
-GPIO.setup(cfg.PIN_TRIG, GPIO.OUT)
-GPIO.setup(cfg.PIN_ECHO, GPIO.IN)
-
 
 def getDistance():
 	start = None
