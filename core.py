@@ -76,7 +76,7 @@ def initPins():
 
 @app.route("/")
 def index():
-	print("RENDER")
+	log.debug("RENDER")
 	return render_template("index.html")
 
 

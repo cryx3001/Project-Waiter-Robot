@@ -4,6 +4,7 @@ from threading import Thread
 import cv2
 import motors as mot
 import target_process as tp
+import log as log
 
 lastQrText = None
 
@@ -52,13 +53,13 @@ def getNodeDirection(qrtext, target):
 					id = data.index(d)
 
 					if not mot.stopCall and not mot.sensorCollision:
-						print("ID:" + str(id))
+						log.debug("ID:" + str(id))
 						t = Thread(target=mot.doTurn, args=[201+id])
 						t.start()
 					break
 
 		except ValueError:
-			print("QR CODE INVALIDE")
+			log.debug("QR CODE INVALIDE")
 
 
 def process_contours(img, show):

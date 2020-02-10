@@ -1,10 +1,12 @@
+import log as log
+
 target_id = -1
 
 def getStatusCode(t):
 	if t is not None:
 		global target_id
 		target_id = t
-		print("GET " + str(target_id))
+		log.debug("GET " + str(target_id))
 
 
 def sendStatusCode():
