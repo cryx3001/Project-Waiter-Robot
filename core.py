@@ -8,6 +8,7 @@ import target_process as tp
 import stream_process as sp
 import motors as mot
 import config as cfg
+import log as log
 
 vs = WebcamVideoStream(src=0).start()
 lock = threading.Lock()
@@ -102,6 +103,7 @@ def getStatus():
 
 
 if __name__ == '__main__':
+	log.startTimer()
 	app.run("0.0.0.0", "8000", debug=True, threaded=True, use_reloader=False)
 
 
