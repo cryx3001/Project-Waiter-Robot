@@ -1,20 +1,27 @@
 import RPi.GPIO as GPIO
 import time
 import config as cfg
+import log
 
-
-def getDistance():
+def getDistance(typeSensor):
 	start = None
 	stop = None
 
-	GPIO.output(cfg.PIN_TRIG, True)
-	time.sleep(0.00001)
-	GPIO.output(cfg.PIN_TRIG, False)
+	if typeSensor == "dep":
+		trig = cfg.PIN_TRIG
+		echo = cfg.PIN_ECHO
+	elif typeSensor == "elev":
+		trig = cfg.PIN_TRIG_ELEVATION
+		echo = cfg.PIN_ECHO_ELEVATION
 
-	while GPIO.input(cfg.PIN_ECHO) == 0:
+	GPIO.output(trig, True)
+	time.sleep(0.00001)
+	GPIO.output(trig, False)
+
+	while GPIO.input(echo) == 0:
 		start = time.time()
 
-	while GPIO.input(cfg.PIN_ECHO) == 1:
+	while GPIO.input(echo) == 1:
 		stop = time.time()
 
 	tps = stop - start
@@ -22,4 +29,3 @@ def getDistance():
 
 	if dist < 1000:
 		return dist
-

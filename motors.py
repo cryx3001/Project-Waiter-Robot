@@ -3,9 +3,11 @@ import distance_sensor as ds
 import RPi.GPIO as GPIO
 from math import *
 import config as cfg
+import log
 
 leftMotPwm = None
 rightMotPwm = None
+carryMotPwm = None
 stopCall = False
 sensorCollision = False
 
@@ -16,6 +18,10 @@ def initPwm():
 
 	global rightMotPwm
 	rightMotPwm = GPIO.PWM(cfg.PIN_RIGHT_MOTOR, 1000)
+	rightMotPwm.start(0)
+
+	global carryMotPwm
+	rightMotPwm = GPIO.PWM(cfg.PIN_CARRY_SPEED, 1000)
 	rightMotPwm.start(0)
 
 def fullMotorTimer():
@@ -92,7 +98,7 @@ def preventCollision():
 
 	# if stopCall is False:
 	#
-	# 	dist = ds.getDistance()
+	# 	dist = ds.getDistance("dep")
 	# 	if dist is not None and dist < 50:#1 meter
 	# 		# rightMotPwm.ChangeDutyCycle(dist)
 	# 		# leftMotPwm.ChangeDutyCycle(dist)
@@ -100,3 +106,21 @@ def preventCollision():
 	#
 	# 	else:
 	# 		sensorCollision = False
+
+
+def elevationMotors(direction):
+	if direction == "up":
+		# GPIO.output(cfg.PIN_CARRY_ROTATION_ONE, True)
+		# GPIO.output(cfg.PIN_CARRY_ROTATION_TWO, False)
+		log.debug("up")
+
+	elif direction == "down":
+		# GPIO.output(cfg.PIN_CARRY_ROTATION_ONE, False)
+		# GPIO.output(cfg.PIN_CARRY_ROTATION_TWO, True)
+		log.debug("down")
+
+	elif direction == "stop":
+		# GPIO.output(cfg.PIN_CARRY_ROTATION_ONE, False)
+		# GPIO.output(cfg.PIN_CARRY_ROTATION_TWO, False)
+		log.debug("stop")
+

@@ -66,12 +66,19 @@ def show_webcam():
 def initPins():
 	GPIO.setmode(GPIO.BCM)
 
-	GPIO.setup(cfg.PIN_LEFT_MOTOR)
-	GPIO.setup(cfg.PIN_RIGHT_MOTOR)
+	GPIO.setup(cfg.PIN_LEFT_MOTOR, GPIO.OUT)
+	GPIO.setup(cfg.PIN_RIGHT_MOTOR, GPIO.OUT)
 	mot.initPwm()
 
 	GPIO.setup(cfg.PIN_TRIG, GPIO.OUT)
 	GPIO.setup(cfg.PIN_ECHO, GPIO.IN)
+
+	GPIO.setup(cfg.PIN_TRIG_ELEVATION, GPIO.OUT)
+	GPIO.setup(cfg.PIN_ECHO_ELEVATION, GPIO.IN)
+
+	GPIO.setup(cfg.PIN_CARRY_SPEED, GPIO.OUT)
+	GPIO.setup(cfg.PIN_CARRY_ROTATION_ONE, GPIO.OUT)
+	GPIO.setup(cfg.PIN_CARRY_ROTATION_TWO, GPIO.OUT)
 
 
 @app.route("/")
