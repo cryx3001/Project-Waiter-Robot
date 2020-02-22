@@ -3,14 +3,17 @@ import time
 import config as cfg
 import log
 
-def getDistance(typeSensor):
+
+def get_distance(type_sensor):
 	start = None
 	stop = None
+	trig = None
+	echo = None
 
-	if typeSensor == "dep":
+	if type_sensor == "dep":
 		trig = cfg.PIN_TRIG
 		echo = cfg.PIN_ECHO
-	elif typeSensor == "elev":
+	elif type_sensor == "elev":
 		trig = cfg.PIN_TRIG_ELEVATION
 		echo = cfg.PIN_ECHO_ELEVATION
 

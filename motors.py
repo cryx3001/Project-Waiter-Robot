@@ -5,28 +5,30 @@ from math import *
 import config as cfg
 import log
 
-leftMotPwm = None
-rightMotPwm = None
-carryMotPwm = None
-stopCall = False
-sensorCollision = False
+left_mot_pwm = None
+right_mot_pwm = None
+carry_mot_pwm = None
+stop_call = False
+sensor_collision = False
 
-def initPwm():
-	global leftMotPwm
-	leftMotPwm = GPIO.PWM(cfg.PIN_LEFT_MOTOR, 1000)
-	leftMotPwm.start(0)
 
-	global rightMotPwm
-	rightMotPwm = GPIO.PWM(cfg.PIN_RIGHT_MOTOR, 1000)
-	rightMotPwm.start(0)
+def init_pwm():
+	global left_mot_pwm
+	left_mot_pwm = GPIO.PWM(cfg.PIN_LEFT_MOTOR, 1000)
+	left_mot_pwm.start(0)
 
-	global carryMotPwm
-	rightMotPwm = GPIO.PWM(cfg.PIN_CARRY_SPEED, 1000)
-	rightMotPwm.start(0)
+	global right_mot_pwm
+	right_mot_pwm = GPIO.PWM(cfg.PIN_RIGHT_MOTOR, 1000)
+	right_mot_pwm.start(0)
 
-def fullMotorTimer():
-	# rightMotPwm.ChangeDutyCycle(100)
-	# leftMotPwm.ChangeDutyCycle(100)
+	global carry_mot_pwm
+	right_mot_pwm = GPIO.PWM(cfg.PIN_CARRY_SPEED, 1000)
+	right_mot_pwm.start(0)
+
+
+def full_motor_timer():
+	# right_mot_pwm.ChangeDutyCycle(100)
+	# left_mot_pwm.ChangeDutyCycle(100)
 	print("oui")
 
 
@@ -35,80 +37,78 @@ def fullMotorTimer():
 # 202 = Forward
 # 203 = Right
 # 204 = Backward
-def adaptDutyCycleDep(camValue):
-	global stopCall
+def adapt_duty_cycle_dep(cam_value):
+	global stop_call
 
-	if camValue != -100 and camValue != 100 and -100 < camValue < 100:
-		if camValue < 0:
-			leftPow = floor(100 + camValue)
-			rightPow = 100
+	if cam_value != -100 and cam_value != 100 and -100 < cam_value < 100:
+		if cam_value < 0:
+			left_pow = floor(100 + cam_value)
+			right_pow = 100
 
 
-		elif camValue > 0:
-			leftPow = 100
-			rightPow = floor(100 - camValue)
+		elif cam_value > 0:
+			left_pow = 100
+			right_pow = floor(100 - cam_value)
 
 		else:
-			leftPow = 100
-			rightPow = 100
-
-		# rightMotPwm.ChangeDutyCycle(rightPow)
-		# leftMotPwm.ChangeDutyCycle(leftPow)
+			left_pow = 100
+			right_pow = 100
 
 	else:
-		leftPow = 0
-		rightPow = 0
-		# Maybe add a method to analyze the area
-
-		# rightMotPwm.ChangeDutyCycle(rightPow)
-		# leftMotPwm.ChangeDutyCycle(leftPow)
+		left_pow = 0
+		right_pow = 0
 
 
-def doTurn(camValue):
-	global stopCall
+# right_mot_pwm.ChangeDutyCycle(right_pow)
+# left_mot_pwm.ChangeDutyCycle(left_pow)
 
-	if camValue >= 200:  # Let assume we need 5sec for a 90° turn and 3sec to be right on the qrcode
-		stopCall = True
-		fullMotorTimer()
+
+def do_turn(cam_value):
+	global stop_call
+
+	if cam_value >= 200:  # Let assume we need 5sec for a 90° turn and 3sec to be right on the qrcode
+		stop_call = True
+		full_motor_timer()
 		time.sleep(3)
 
-		if camValue == 201:  # Left
-			# rightMotPwm.ChangeDutyCycle(0)
-			# leftMotPwm.ChangeDutyCycle(100)
+		if cam_value == 201:  # Left
+			# right_mot_pwm.ChangeDutyCycle(0)
+			# left_mot_pwm.ChangeDutyCycle(100)
 			time.sleep(5)
 
-		elif camValue == 203:  # Right
-			# rightMotPwm.ChangeDutyCycle(100)
-			# leftMotPwm.ChangeDutyCycle(0)
+		elif cam_value == 203:  # Right
+			# right_mot_pwm.ChangeDutyCycle(100)
+			# left_mot_pwm.ChangeDutyCycle(0)
 			time.sleep(cfg.TURN_TIME)
 
-		elif camValue == 204:  # Behind (Should never happen)
-			# rightMotPwm.ChangeDutyCycle(100)
-			# leftMotPwm.ChangeDutyCycle(0)
-			time.sleep(cfg.TURN_TIME*2)
+		elif cam_value == 204:  # Behind (Should never happen)
+			# right_mot_pwm.ChangeDutyCycle(100)
+			# left_mot_pwm.ChangeDutyCycle(0)
+			time.sleep(cfg.TURN_TIME * 2)
 
-		# rightMotPwm.ChangeDutyCycle(0)
-		# leftMotPwm.ChangeDutyCycle(0)
-		stopCall = False
-
-
-def preventCollision():
-	global stopCall
-	global sensorCollision
-
-	# if stopCall is False:
-	#
-	# 	dist = ds.getDistance("dep")
-	# 	if dist is not None and dist < 50:#1 meter
-	# 		# rightMotPwm.ChangeDutyCycle(dist)
-	# 		# leftMotPwm.ChangeDutyCycle(dist)
-	# 		sensorCollision = True
-	#
-	# 	else:
-	# 		sensorCollision = False
+		# right_mot_pwm.ChangeDutyCycle(0)
+		# left_mot_pwm.ChangeDutyCycle(0)
+		stop_call = False
 
 
-def elevationMotors(direction):
+def prevent_collision():
+	global stop_call
+	global sensor_collision
+
+
+# if stop_call is False:
+#
+# 	dist = ds.get_distance("dep")
+# 	if dist is not None and dist < 50:#1 meter
+# 		# right_mot_pwm.ChangeDutyCycle(dist)
+# 		# left_mot_pwm.ChangeDutyCycle(dist)
+# 		sensor_collision = True
+#
+# 	else:
+# 		sensor_collision = False
+
+
+def elevation_motors(direction):
 	if direction == "up":
 		# GPIO.output(cfg.PIN_CARRY_ROTATION_ONE, True)
 		# GPIO.output(cfg.PIN_CARRY_ROTATION_TWO, False)
@@ -123,4 +123,3 @@ def elevationMotors(direction):
 		# GPIO.output(cfg.PIN_CARRY_ROTATION_ONE, False)
 		# GPIO.output(cfg.PIN_CARRY_ROTATION_TWO, False)
 		log.debug("stop")
-
