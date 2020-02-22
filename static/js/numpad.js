@@ -1,9 +1,9 @@
 // ALL CREDITS TO W.S Toh FOR THE ORIGINAL CODE FROM: https://code-boxx.com/pure-javascript-numeric-keypad/
 var numpad = {
-selector: null,
-display: null,
-zero: null,
-target: null,
+	selector: null,
+	display: null,
+	zero: null,
+	target: null,
 
 
 	init: function () {
@@ -23,17 +23,18 @@ target: null,
 
 		// ATTACH BUTTONS
 		var buttons = document.createElement("div"),
-			button = null,
-			append = function (txt, fn, css) {
-				button = document.createElement("div");
-				button.innerHTML = txt;
-				button.classList.add("numpad-btn");
-				if (css) {
-					button.classList.add(css);
-				}
-				button.addEventListener("click", fn);
-				buttons.appendChild(button);
-			};
+		    button = null,
+		    append = function (txt, fn, css) {
+			    button = document.createElement("div");
+			    button.innerHTML = txt;
+			    button.classList.add("numpad-btn");
+			    if (css) {
+				    button.classList.add(css);
+			    }
+			    button.addEventListener("click", fn);
+			    buttons.appendChild(button);
+		    };
+		
 		buttons.id = "numpad-btns";
 		// First row - 7 to 9, delete.
 		for (var i = 7; i <= 9; i++) {
@@ -97,7 +98,7 @@ target: null,
 		// digit() : append a digit
 
 		var current = numpad.display.value,
-			append = evt.target.innerHTML;
+		    append = evt.target.innerHTML;
 
 		if (current.length < 2) {
 			if (current == "0") {
@@ -125,6 +126,7 @@ target: null,
 		xhr.send(data);
 
 		numpad.reset();
-	}};
+	}
+};
 
 window.addEventListener("load", numpad.init);
