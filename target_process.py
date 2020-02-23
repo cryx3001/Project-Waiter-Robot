@@ -3,6 +3,12 @@ import log
 target_id = -1
 
 
+#  > 0	: Go to target number ..
+#  0	: Go to home
+# -1 	: Nothing sent
+# -2	: On Target
+# -3	: Stopped
+
 def get_status_code(t):
 	"""
 	Storing the input of the user
@@ -19,7 +25,8 @@ def send_status_code():
 	Make the codes readable by the user
 	:return: The redable version of the code
 	"""
-	tab = {
+	tab_code = {
+		-3: "Stopped",
 		-2: "On target",
 		-1: "Waiting for input",
 		0: "Going home",
@@ -28,7 +35,7 @@ def send_status_code():
 	if target_id > 0:
 		return "Go: " + str(target_id)
 	else:
-		return tab[target_id]
+		return tab_code[target_id]
 
 
 def get_target():

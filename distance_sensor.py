@@ -13,15 +13,14 @@ def get_distance(type_sensor):
 
 	start = None
 	stop = None
-	trig = None
-	echo = None
 
-	if type_sensor == "dep":
-		trig = cfg.PIN_TRIG
-		echo = cfg.PIN_ECHO
-	elif type_sensor == "elev":
-		trig = cfg.PIN_TRIG_ELEVATION
-		echo = cfg.PIN_ECHO_ELEVATION
+	tab_sensors = {
+		"dep": (cfg.PIN_TRIG, cfg.PIN_ECHO),
+		"elev": (cfg.PIN_TRIG_ELEVATION, cfg.PIN_ECHO_ELEVATION)
+	}
+
+	trig = tab_sensors[type_sensor][0]
+	echo = tab_sensors[type_sensor][1]
 
 	GPIO.output(trig, True)
 	time.sleep(0.00001)

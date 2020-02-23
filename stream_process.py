@@ -17,19 +17,17 @@ def detect_qrcode(img, show):
 	:return: The text from the qrcode
 	"""
 	global last_qr_text
-
 	codes = pyzbar.decode(img)
-	qr_text = None
 
 	try:
 		if len(codes) > 0:
 			for code in codes:
 				qr_text = code.data.decode("utf-8")
 
-				if qr_text != last_qr_text:
+				if qr_text != last_qr_text and tp.get_target() >= 0:
 					get_node_direction(qr_text, tp.get_target())
-
-				last_qr_text = qr_text
+					log.debug("QRCODE " + qr_text)
+					last_qr_text = qr_text
 
 				if show:
 					points = code.polygon
@@ -37,16 +35,16 @@ def detect_qrcode(img, show):
 					pt1 = (min(points[0][0], points[2][0]), min(points[0][1], points[2][1]))
 					pt2 = (max(points[0][0], points[2][0]), max(points[0][1], points[2][1]))
 
-					cv2.rectangle(img, pt1, pt2, (25, 25, 25), 2)
+					cv2.rectangle(img, pt1, pt2, (230, 230, 230), 2)
 					# pt1 en haut a gauche
 					# pt2 en bas a droite
 
-					cv2.putText(img, qr_text, (pt1[0], pt1[1] - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (25, 25, 25), 2)
+					cv2.putText(img, qr_text, (pt1[0], pt1[1] - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (230, 230, 230), 2)
 
-			return qr_text
+				return qr_text
 
 	except IndexError:
-		print("Erreur")
+		log.debug("IndexError from detect_qrcode")
 
 
 def get_node_direction(qrtext, target):
@@ -71,7 +69,7 @@ def get_node_direction(qrtext, target):
 					break
 
 		except ValueError:
-			log.debug("QR CODE INVALIDE")
+			log.debug("ValueError from get_node_direction")
 
 
 def process_contours(img, show):
@@ -81,8 +79,8 @@ def process_contours(img, show):
 	:param show: Boolean, do we want to see what's happening?
 	:return: The position x of the figure's center
 	"""
-	gris = np.array([30, 30, 30], dtype="uint8")
-	noir = np.array([0, 0, 0], dtype="uint8")
+	gris = np.array(30, dtype="uint8")
+	noir = np.array(0, dtype="uint8")
 
 	biggest_contour = None
 	mask = 255 - cv2.inRange(img, noir, gris)
@@ -98,7 +96,7 @@ def process_contours(img, show):
 				biggest_contour = c
 
 		if show:
-			cv2.drawContours(img, biggest_contour, -1, (0, 255, 0), 3)
+			cv2.drawContours(img, biggest_contour, -1, (250, 250, 250), 3)
 
 		m = cv2.moments(biggest_contour)
 

@@ -28,14 +28,16 @@ def main():
 
 	img = vs.read()
 	img = img[0:int(img.shape[0] / 2), 100:(img.shape[1] - 100)]
+	img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-	qr_text = sp.detect_qrcode(img, args.stream)
-	if not qr_text:
-		c_x = sp.process_contours(img, args.stream)
+	if tp.get_target() >= 0:
+		qr_text = sp.detect_qrcode(img, args.stream)
+		if not qr_text:
+			c_x = sp.process_contours(img, args.stream)
 
-		if i >= 5:  # For performance purposes
-			sp.send_order_direction(100, img.shape[1], c_x)
-			i = 0
+			if i >= 5:  # For performance purposes
+				sp.send_order_direction(100, img.shape[1], c_x)
+				i = 0
 
 	status_text = tp.send_status_code()
 	cv2.putText(img, status_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (155, 155, 155), 2)

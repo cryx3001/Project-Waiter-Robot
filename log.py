@@ -24,6 +24,6 @@ def debug(txt):
 	date = "[" + str("{0:02d}".format(now.hour)) + ":" + str("{0:02d}".format(now.minute)) + ":" + str(
 		"{0:02d}".format(now.second)) + "]" + "[" + str("{0:6.2f}".format(time.time() - start_time)) + "]"
 
-	text_f = date + " " + txt
+	text_f = date + " " + str(txt)
 	print(text_f)
 	f.write(str(text_f) + "\n")

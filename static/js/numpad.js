@@ -34,7 +34,7 @@ var numpad = {
 			    button.addEventListener("click", fn);
 			    buttons.appendChild(button);
 		    };
-		
+
 		buttons.id = "numpad-btns";
 		// First row - 7 to 9, delete.
 		for (var i = 7; i <= 9; i++) {
@@ -86,7 +86,7 @@ var numpad = {
 		const xhr = new XMLHttpRequest();
 		const data = new FormData();
 
-		data.append('input', "-2");
+		data.append('input', "-3");
 		xhr.open('POST', '/api');
 		xhr.send(data);
 

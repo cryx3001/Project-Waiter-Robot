@@ -34,11 +34,6 @@ def full_motor_timer():
 	print("oui")
 
 
-# 200 = Stop
-# 201 = Left
-# 202 = Forward
-# 203 = Right
-# 204 = Backward
 def adapt_duty_cycle_dep(cam_value):
 	"""
 	Adapt the duty cycle for the two pwm signals of the motors, making the robot rotate
@@ -48,7 +43,7 @@ def adapt_duty_cycle_dep(cam_value):
 
 	if cam_value != -100 and cam_value != 100 and -100 < cam_value < 100:
 		if cam_value < 0:
-			left_pow = floor(100 - cam_value)
+			left_pow = floor(100 + cam_value)
 			right_pow = 100
 
 
@@ -65,6 +60,9 @@ def adapt_duty_cycle_dep(cam_value):
 		right_pow = 0
 
 
+# log.debug("LEFT: " + str(left_pow) + " | RIGHT: " + str(right_pow))
+
+
 # right_mot_pwm.ChangeDutyCycle(right_pow)
 # left_mot_pwm.ChangeDutyCycle(left_pow)
 
@@ -79,22 +77,25 @@ def do_turn(id_value):
 	if id_value >= 201:  # Let assume we need 5sec for a 90° turn and 3sec to be right on the qrcode
 		stop_call = True
 		full_motor_timer()
+		log.debug("Node step started. Going on qr code.")
 		time.sleep(3)
 
-		if id_value == 201:  # Left
-			# right_mot_pwm.ChangeDutyCycle(0)
-			# left_mot_pwm.ChangeDutyCycle(100)
-			time.sleep(5)
+		tab_motors = {
+			201: (0, 100, cfg.TURN_TIME),  # Left
+			202: (100, 100, cfg.TURN_TIME),  # Forward
+			203: (100, 0, cfg.TURN_TIME),  # Right
+			204: (100, 0, cfg.TURN_TIME * 2)  # Backward
+		}
 
-		elif id_value == 203:  # Right
-			# right_mot_pwm.ChangeDutyCycle(100)
-			# left_mot_pwm.ChangeDutyCycle(0)
-			time.sleep(cfg.TURN_TIME)
+		log.debug(
+			str(id_value) + ": " + str(tab_motors[id_value][0]) + " " + str(tab_motors[id_value][1]) + " "
+			+ str(tab_motors[id_value][2])
+		)
 
-		elif id_value == 204:  # Behind (Should never happen)
-			# right_mot_pwm.ChangeDutyCycle(100)
-			# left_mot_pwm.ChangeDutyCycle(0)
-			time.sleep(cfg.TURN_TIME * 2)
+		# right_mot_pwm.ChangeDutyCycle(tab_motors[id_value][0])
+		# left_mot_pwm.ChangeDutyCycle(tab_motors[id_value][1])
+		time.sleep(tab_motors[id_value][2])
+		log.debug("Node step finished")
 
 		# right_mot_pwm.ChangeDutyCycle(0)
 		# left_mot_pwm.ChangeDutyCycle(0)
@@ -126,18 +127,13 @@ def elevation_motors(direction):
 	Make the motor for the elevation turning in a way or in the other one
 	:param direction: "up","down" or "stop"
 	"""
-	
-	if direction == "up":
-		# GPIO.output(cfg.PIN_ELEVATION_ROTATION_ONE, True)
-		# GPIO.output(cfg.PIN_ELEVATION_ROTATION_TWO, False)
-		log.debug("Elevation: Up")
 
-	elif direction == "down":
-		# GPIO.output(cfg.PIN_ELEVATION_ROTATION_ONE, False)
-		# GPIO.output(cfg.PIN_ELEVATION_ROTATION_TWO, True)
-		log.debug("Elevation: Down")
+	tab = {
+		"up": (True, False, "Up"),
+		"down": (False, True, "Down"),
+		"stop": (False, False, "Stop"),
+	}
 
-	elif direction == "stop":
-		# GPIO.output(cfg.PIN_ELEVATION_ROTATION_ONE, False)
-		# GPIO.output(cfg.PIN_ELEVATION_ROTATION_TWO, False)
-		log.debug("Elevation: Stop")
+	# GPIO.output(cfg.PIN_ELEVATION_ROTATION_ONE, tab[direction][0])
+	# GPIO.output(cfg.PIN_ELEVATION_ROTATION_TWO, tab[direction][1])
+	log.debug("Elevation: " + str(tab[direction][2]))
