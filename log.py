@@ -15,7 +15,8 @@ def start_timer():
 
 
 def debug(txt):
-	"""Create a log "log.txt" stored on the device
+	"""
+	Create a log "log.txt" stored on the device
 	:param txt: String to show
 	"""
 

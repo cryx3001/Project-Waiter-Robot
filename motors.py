@@ -27,7 +27,7 @@ def init_pwm():
 
 def full_motor_timer():
 	"""
-	Send a continuous signal to motors
+	Send a continuous signal to the motors
 	"""
 	# right_mot_pwm.ChangeDutyCycle(100)
 	# left_mot_pwm.ChangeDutyCycle(100)
@@ -126,6 +126,7 @@ def elevation_motors(direction):
 	Make the motor for the elevation turning in a way or in the other one
 	:param direction: "up","down" or "stop"
 	"""
+	
 	if direction == "up":
 		# GPIO.output(cfg.PIN_ELEVATION_ROTATION_ONE, True)
 		# GPIO.output(cfg.PIN_ELEVATION_ROTATION_TWO, False)

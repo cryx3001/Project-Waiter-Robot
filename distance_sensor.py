@@ -8,9 +8,9 @@ def get_distance(type_sensor):
 	"""
 	Get the distance between the sensor and the obstacle
 	:param type_sensor: "dep" or "elev", depending of the sensor chose
-	:return: The distance
+	:return: The distance in centimeters
 	"""
-	
+
 	start = None
 	stop = None
 	trig = None

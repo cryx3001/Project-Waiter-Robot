@@ -110,9 +110,9 @@ def get_status():
 
 	if request.method == "POST":
 		try:
-			number_table = request.values.get('input', '')
-			tp.get_status_code(int(number_table))
-			return number_table
+			table_number = request.values.get('input', '')
+			tp.get_status_code(int(table_number))
+			return table_number
 
 		except ValueError:
 			tp.get_status_code(-2)
