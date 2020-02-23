@@ -1,4 +1,4 @@
-#Deplacement
+# Deplacement
 PIN_TRIG = None
 PIN_ECHO = None
 
@@ -7,10 +7,9 @@ PIN_RIGHT_MOTOR = None
 
 TURN_TIME = 5
 
-#Elevation
+# Elevation
 PIN_TRIG_ELEVATION = None
 PIN_ECHO_ELEVATION = None
 
-PIN_CARRY_SPEED = None
-PIN_CARRY_ROTATION_ONE = None
-PIN_CARRY_ROTATION_TWO = None
+PIN_ELEVATION_ROTATION_ONE = None
+PIN_ELEVATION_ROTATION_TWO = None

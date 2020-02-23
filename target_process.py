@@ -4,6 +4,10 @@ target_id = -1
 
 
 def get_status_code(t):
+	"""
+	Storing the input of the user
+	:param t: The input from the webpage
+	"""
 	if t is not None:
 		global target_id
 		target_id = t
@@ -11,11 +15,14 @@ def get_status_code(t):
 
 
 def send_status_code():
+	"""
+	Make the codes readable by the user
+	:return: The redable version of the code
+	"""
 	tab = {
-		-3: "Sur cible",
-		-2: "Annulé",
-		-1: "Attente",
-		0: "Retour",
+		-2: "On target",
+		-1: "Waiting for input",
+		0: "Going home",
 	}
 
 	if target_id > 0:
@@ -25,4 +32,7 @@ def send_status_code():
 
 
 def get_target():
+	"""
+	:return: Get target_id
+	"""
 	return target_id

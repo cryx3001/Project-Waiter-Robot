@@ -10,6 +10,12 @@ last_qr_text = None
 
 
 def detect_qrcode(img, show):
+	"""
+	Detect qrcodes from the camera
+	:param img: Image analysed
+	:param show: Boolean, do we want to see what's happening?
+	:return: The text from the qrcode
+	"""
 	global last_qr_text
 
 	codes = pyzbar.decode(img)
@@ -44,6 +50,11 @@ def detect_qrcode(img, show):
 
 
 def get_node_direction(qrtext, target):
+	"""
+	From the text and the table number, get the direction and call mot.do_turn with it.
+	:param qrtext: Text from the qrcode
+	:param target: The table number
+	"""
 	data = qrtext.split("/")
 	for d in data:
 		data_bis = d.split()
@@ -64,6 +75,12 @@ def get_node_direction(qrtext, target):
 
 
 def process_contours(img, show):
+	"""
+	Find the contours of black figures to get their center
+	:param img: Image analysed
+	:param show: Boolean, do we want to see what's happening?
+	:return: The position x of the figure's center
+	"""
 	gris = np.array([30, 30, 30], dtype="uint8")
 	noir = np.array([0, 0, 0], dtype="uint8")
 
@@ -81,7 +98,7 @@ def process_contours(img, show):
 				biggest_contour = c
 
 		if show:
-			img = cv2.drawContours(img, biggest_contour, -1, (0, 255, 0), 3)
+			cv2.drawContours(img, biggest_contour, -1, (0, 255, 0), 3)
 
 		m = cv2.moments(biggest_contour)
 
@@ -90,18 +107,24 @@ def process_contours(img, show):
 			c_y = int(m["m01"] / m["m00"])
 
 			if c_x != 219 and c_y != 119 and show:
-				img = cv2.circle(img, (c_x, c_y), 7, (255, 255, 255), -1)
+				cv2.circle(img, (c_x, c_y), 7, (255, 255, 255), -1)
 
-			return img, biggest_contour, c_x, c_y
+			return c_x
 
 		else:
-			return img, biggest_contour, 0, 0
+			return 0
 
 	else:
-		return img, 0, 0, 0
+		return 0
 
 
 def send_order_direction(xmargin, imgwidth, cx):
+	"""
+	Depending of a position x on the image, create a coefficient between -100 and 100
+	:param xmargin: The dead zone
+	:param imgwidth: The width of the image
+	:param cx: The position x on the image
+	"""
 	xcenter_img = imgwidth / 2
 
 	xlimit_left = xcenter_img - (xmargin / 2)

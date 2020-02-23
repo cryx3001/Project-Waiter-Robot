@@ -21,6 +21,8 @@ i = 0
 
 
 def main():
+	"""Main function"""
+
 	global i
 	i = i + 1
 
@@ -29,9 +31,9 @@ def main():
 
 	qr_text = sp.detect_qrcode(img, args.stream)
 	if not qr_text:
-		img, biggest_contour, c_x, c_y = sp.process_contours(img, args.stream)
+		c_x = sp.process_contours(img, args.stream)
 
-		if i >= 5:
+		if i >= 5:  # For performance purposes
 			sp.send_order_direction(100, img.shape[1], c_x)
 			i = 0
 
@@ -42,6 +44,8 @@ def main():
 
 
 def show_webcam():
+	"""Function used to show what's going on with the entire algorithm. (Reduce performances)"""
+
 	missing_img = cv2.imread('./static/img/missing.png')
 
 	while True:
@@ -64,6 +68,8 @@ def show_webcam():
 
 
 def init_pins():
+	"""Initialize every pins needed depending on the values in cfg.py"""
+
 	GPIO.setmode(GPIO.BCM)
 
 	GPIO.setup(cfg.PIN_LEFT_MOTOR, GPIO.OUT)
@@ -76,29 +82,32 @@ def init_pins():
 	GPIO.setup(cfg.PIN_TRIG_ELEVATION, GPIO.OUT)
 	GPIO.setup(cfg.PIN_ECHO_ELEVATION, GPIO.IN)
 
-	GPIO.setup(cfg.PIN_CARRY_SPEED, GPIO.OUT)
-	GPIO.setup(cfg.PIN_CARRY_ROTATION_ONE, GPIO.OUT)
-	GPIO.setup(cfg.PIN_CARRY_ROTATION_TWO, GPIO.OUT)
+	GPIO.setup(cfg.PIN_ELEVATION_ROTATION_ONE, GPIO.OUT)
+	GPIO.setup(cfg.PIN_ELEVATION_ROTATION_TWO, GPIO.OUT)
 
 
 @app.route("/")
 def index():
+	"""Create the web page for the user interface"""
+
 	log.debug("RENDER")
-	return render_template("index.html")
+	return render_template("index.html")  # templates/index.html
 
 
 @app.route("/video_feed")
 def video_feed():
+	"""Return the video feed"""
+
 	return Response(show_webcam(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
 
-#  > 0	: Go to target number ..
-#  0	: Go to home
-# -1 	: Nothing sent
-# -2 	: Action cancelled
-# -3	: On Target
 @app.route('/api', methods=["POST"])
 def get_status():
+	"""
+	Return the input from the web page.
+	:rtype: int
+	"""
+
 	if request.method == "POST":
 		try:
 			number_table = request.values.get('input', '')
@@ -106,8 +115,8 @@ def get_status():
 			return number_table
 
 		except ValueError:
-			tp.get_status_code(-1)
-			return -1
+			tp.get_status_code(-2)
+			return -2
 
 
 if __name__ == '__main__':
