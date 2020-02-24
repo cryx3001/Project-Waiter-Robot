@@ -1,5 +1,6 @@
 import time
 import distance_sensor as ds
+import target_process as tp
 import RPi.GPIO as GPIO
 from math import *
 import config as cfg
@@ -122,13 +123,52 @@ def prevent_collision():
 # 		sensor_collision = False
 
 
+def elevation():
+	"""
+	For when the robot has to give the plates
+	"""
+
+	# Let's assume for the moment that the "arms" are on their highest level
+	# We have to time how much time does it take to lower the arms, then they will raise for the same amount of time
+	global stop_call
+	stop_call = True
+	tp.get_status_code(-2)
+	elevation_motors("down")
+	
+	time_start = time.time()
+
+	while True:
+		if ds.get_distance("elev") < 5:
+			elevation_motors("stop")
+			time_needed = time.time() - time_start
+			log.debug("Time needed: " + str(time_needed))
+			break
+
+	# Then the arms doesn't move for 10 seconds, giving the time for the users to take the plates
+	while True:
+		if (time_needed + time_start + cfg.PAUSE_TIME) < time.time():
+			elevation_motors("up")
+			break
+
+	time_start = time.time()
+	log.debug("Motor should stop at " + str(time_start + time_needed))
+	while True:
+		if time.time() > (time_start + time_needed):
+			elevation_motors("stop")
+			log.debug("Stopped at " + str(time.time()))
+			break
+
+	do_turn(204)  # The robot will do a 180° turn, and then will go back to "home"
+	tp.get_status_code(0)
+
+
 def elevation_motors(direction):
 	"""
 	Make the motor for the elevation turning in a way or in the other one
 	:param direction: "up","down" or "stop"
 	"""
 
-	tab = {
+	tab_elev = {
 		"up": (True, False, "Up"),
 		"down": (False, True, "Down"),
 		"stop": (False, False, "Stop"),
@@ -136,4 +176,4 @@ def elevation_motors(direction):
 
 	# GPIO.output(cfg.PIN_ELEVATION_ROTATION_ONE, tab[direction][0])
 	# GPIO.output(cfg.PIN_ELEVATION_ROTATION_TWO, tab[direction][1])
-	log.debug("Elevation: " + str(tab[direction][2]))
+	log.debug("Elevation: " + str(tab_elev[direction][2]))

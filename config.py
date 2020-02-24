@@ -6,6 +6,7 @@ PIN_LEFT_MOTOR = None
 PIN_RIGHT_MOTOR = None
 
 TURN_TIME = 5
+PAUSE_TIME = 10
 
 # Elevation
 PIN_TRIG_ELEVATION = None

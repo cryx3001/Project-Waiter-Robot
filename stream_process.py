@@ -53,23 +53,27 @@ def get_node_direction(qrtext, target):
 	:param qrtext: Text from the qrcode
 	:param target: The table number
 	"""
-	data = qrtext.split("/")
-	for d in data:
-		data_bis = d.split()
+	if qrtext == "TARGET":
+		mot.elevation()
+	else:
+		data = qrtext.split("/")
 
-		try:
-			for d_bis in data_bis:
-				if int(d_bis) == target:
-					id_turn = data.index(d)
+		for d in data:
+			data_bis = d.split()
 
-					if not mot.stop_call and not mot.sensor_collision:
-						log.debug("ID:" + str(id_turn))
-						t = Thread(target=mot.do_turn, args=[201 + id_turn])
-						t.start()
-					break
+			try:
+				for d_bis in data_bis:
+					if int(d_bis) == target:
+						id_turn = data.index(d)
 
-		except ValueError:
-			log.debug("ValueError from get_node_direction")
+						if not mot.stop_call and not mot.sensor_collision:
+							log.debug("ID:" + str(id_turn))
+							t = Thread(target=mot.do_turn, args=[201 + id_turn])
+							t.start()
+						break
+
+			except ValueError:
+				log.debug("ValueError from get_node_direction")
 
 
 def process_contours(img, show):
