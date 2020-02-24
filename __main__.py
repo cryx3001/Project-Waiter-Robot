@@ -113,9 +113,11 @@ def get_status():
 		try:
 			table_number = request.values.get('input', '')
 			tp.get_status_code(int(table_number))
+			return table_number
 
 		except ValueError:
 			tp.get_status_code(-1)
+			return -1
 
 
 if __name__ == '__main__':
