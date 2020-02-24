@@ -54,7 +54,8 @@ def get_node_direction(qrtext, target):
 	:param target: The table number
 	"""
 	if qrtext == "TARGET":
-		mot.elevation()
+		t = Thread(target=mot.elevation())
+		t.start()
 	else:
 		data = qrtext.split("/")
 

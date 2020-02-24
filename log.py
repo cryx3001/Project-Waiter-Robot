@@ -27,3 +27,9 @@ def debug(txt):
 	text_f = date + " " + str(txt)
 	print(text_f)
 	f.write(str(text_f) + "\n")
+
+
+def get_time():
+	"""Return the time since the program has been launched"""
+	global start_time
+	return time.time() - start_time

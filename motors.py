@@ -130,15 +130,18 @@ def elevation():
 
 	# Let's assume for the moment that the "arms" are on their highest level
 	# We have to time how much time does it take to lower the arms, then they will raise for the same amount of time
+	
 	global stop_call
 	stop_call = True
+	log.debug("Starting elevation step")
 	tp.get_status_code(-2)
 	elevation_motors("down")
-	
+
 	time_start = time.time()
 
 	while True:
-		if ds.get_distance("elev") < 5:
+		# if ds.get_distance("elev") < 5:
+		if time.time() > (time_start + 5):  # For testing purposes
 			elevation_motors("stop")
 			time_needed = time.time() - time_start
 			log.debug("Time needed: " + str(time_needed))
@@ -151,15 +154,17 @@ def elevation():
 			break
 
 	time_start = time.time()
-	log.debug("Motor should stop at " + str(time_start + time_needed))
+	log.debug("Motor should stop at " + str(log.get_time() + time_needed))
 	while True:
 		if time.time() > (time_start + time_needed):
 			elevation_motors("stop")
-			log.debug("Stopped at " + str(time.time()))
+			log.debug("Stopped at " + str(log.get_time()))
 			break
 
 	do_turn(204)  # The robot will do a 180° turn, and then will go back to "home"
 	tp.get_status_code(0)
+	log.debug("Elevation step finished")
+	stop_call = False
 
 
 def elevation_motors(direction):
