@@ -1,5 +1,5 @@
 # The waiter robot
-This project is about creating a robot which will be able to serve people in a restaurant or bar with the minimum interactions with the users. 
+This project is about creating a robot which will be able to serve people in restaurants or bars with the minimum interactions with the users. 
 We are a group of three 17yo friends working on this for a school project, one is working on the mechanical aspect, the other one is working on the motors and the battery and I'm working on the whole algorithm.
 
 ## How does it work?
